@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useRef } from 'react';
+import Form from './component/Form';
+import FormStore from './component/FormStore';
+import Field from './component/Field';
 
 function App() {
+  const store = useRef(new FormStore());
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    const data = store.current.getValue();
+    console.log(data);
+
+    // ...
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Form store={store.current} onSubmit={onSubmit}>
+        <Field name="username">
+          <input />
+        </Field>
+        <Field name="password">
+          <input type="password" />
+        </Field>
+        <button>Submit</button>
+      </Form>
     </div>
   );
 }
