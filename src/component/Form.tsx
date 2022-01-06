@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const FormStoreContext = React.createContext(undefined);
+export const FormStoreContext = React.createContext(null);
 
 interface FormProps {
   store: any;

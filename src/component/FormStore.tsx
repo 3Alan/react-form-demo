@@ -7,7 +7,7 @@ export default class FormStore {
   listeners: any[] = [];
   errors: any = {};
 
-  constructor(defaultValue = {}, rules = {}) {
+  constructor({ defaultValue = {}, rules = {} }) {
     this.value = defaultValue;
 
     this.defaultValue = deepClone(defaultValue);
@@ -33,7 +33,7 @@ export default class FormStore {
   }
 
   public getFiledValue(filedName: string) {
-    return this.value[filedName];
+    return this.value[filedName] || '';
   }
 
   public getValue() {
@@ -56,43 +56,43 @@ export default class FormStore {
     this.notify('*');
   }
 
-  error(name: string, value: any) {
-    const args = arguments;
-    // 如果没有传入参数，则返回错误信息中的第一条
-    // const errors = store.error()
-    if (args.length === 0) return this.errors;
+  getError(name: string) {
+    if (name === undefined) return this.errors;
 
-    // 如果传入的name是number类型，返回第i条错误信息
-    // const error = store.error(0)
     if (typeof name === 'number') {
       name = Object.keys(this.errors)[name];
     }
 
-    // 如果传了value，则根据value值设置或删除name对应的错误信息
-    if (args.length === 2) {
-      if (value === undefined) {
-        delete this.errors[name];
-      } else {
-        this.errors[name] = value;
-      }
-    }
-
-    // 返回错误信息
     return this.errors[name];
   }
 
-  public validate(fieldName: string) {
-    if (fieldName === undefined) {
-      Object.keys(this.rules).forEach(item => {});
+  setError(name: string, value: any) {
+    if (value === undefined) {
+      delete this.errors[name];
+    } else {
+      this.errors[name] = value;
     }
+  }
 
-    const validator = this.rules[fieldName];
-    const fieldValue = this.getFiledValue(fieldName);
-    const result = validator ? validator(fieldValue, this.value) : true;
+  public validate(fieldName?: string) {
+    if (fieldName === undefined) {
+      Object.keys(this.rules).forEach(name => {
+        this.validate(name);
+      });
+    } else {
+      const validator = this.rules[fieldName];
 
-    const message = this.error(fieldName, result === true ? undefined : result || '');
-    const error = message === undefined ? undefined : new Error(message);
+      const fieldValue = this.getFiledValue(fieldName);
+      const [pass, errorMessage] = validator ? validator(fieldValue, this.value) : [true, ''];
 
-    return [error, fieldValue];
+      let error;
+
+      if (!pass) {
+        this.setError(fieldName, errorMessage);
+        error = new Error(errorMessage);
+      }
+
+      return [error, fieldValue];
+    }
   }
 }
