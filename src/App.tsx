@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import Form from './component/Form';
 import FormStore from './component/FormStore';
 import Field from './component/Field';
+import Input from './component/Input';
 
 function App() {
   const store = useRef(
@@ -30,10 +31,10 @@ function App() {
     <div className="App">
       <Form store={store.current} onSubmit={onSubmit}>
         <Field label="username" name="username">
-          <input />
+          <Input />
         </Field>
         <Field label="age > 10" name="age" type="number">
-          <input type="number" />
+          <Input type="number" />
         </Field>
         <button>Submit</button>
       </Form>

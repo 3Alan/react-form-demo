@@ -42,8 +42,7 @@ export default class FormStore {
 
   public setFiledValue(fieldName: string, fieldValue: any) {
     this.value[fieldName] = fieldValue;
-
-    this.validate(fieldName);
+    delete this.errors[fieldName];
 
     this.notify(fieldName);
   }
@@ -91,6 +90,8 @@ export default class FormStore {
         this.setError(fieldName, errorMessage);
         error = new Error(errorMessage);
       }
+
+      this.notify(fieldName);
 
       return [error, fieldValue];
     }

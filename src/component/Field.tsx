@@ -91,6 +91,7 @@ export default class Field extends React.Component<FieldProps, FieldState> {
     const { value, errorMessage } = this.state;
 
     const childProps = {
+      validateFailed: !!errorMessage,
       value,
       onChange: this.onChange
     };
