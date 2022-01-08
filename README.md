@@ -11,11 +11,11 @@ function App() {
       age: 10
     },
     rules: {
-      age: (value: any) => [value > 10, 'age must more than 10']
+      age: (value) => [value > 10, 'age must more than 10']
     }
   });
 
-  const onSubmit = (values: StoreData) => {
+  const onSubmit = (values) => {
     console.log(values);
   };
 
