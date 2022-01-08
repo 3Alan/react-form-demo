@@ -5,6 +5,7 @@ interface FieldProps {
   label?: string;
   name: string;
   type?: 'string' | 'number';
+  children: React.ReactElement;
 }
 
 interface FieldState {
@@ -32,7 +33,7 @@ export default class Field extends React.Component<FieldProps, FieldState> {
 
   componentDidMount() {
     const { name } = this.props;
-    const value = this.context ? this.context.getFiledValue(name) : '';
+    const value = this.context ? this.context.getFieldValue(name) : '';
 
     this.setState({
       value: this.formatValue(value),
@@ -54,7 +55,7 @@ export default class Field extends React.Component<FieldProps, FieldState> {
     const { name } = this.props;
 
     this.unSubscribeStore = this.context.subscribe((fieldName: string) => {
-      const value = this.context ? this.context.getFiledValue(name) : '';
+      const value = this.context ? this.context.getFieldValue(name) : '';
       if (fieldName === name || fieldName === '*') {
         console.log(this.context.getError());
 
@@ -79,11 +80,11 @@ export default class Field extends React.Component<FieldProps, FieldState> {
     const { name, type } = this.props;
 
     if (type === 'number') {
-      this.context.setFiledValue(name, e.target.valueAsNumber);
+      this.context.setFieldsValue({ [name]: e.target.valueAsNumber });
       return;
     }
 
-    this.context.setFiledValue(name, e.target.value);
+    this.context.setFieldsValue({ [name]: e.target.value });
   };
 
   render() {
@@ -96,7 +97,6 @@ export default class Field extends React.Component<FieldProps, FieldState> {
       onChange: this.onChange
     };
 
-    // @ts-ignore
     const cloneChildren = React.cloneElement(children, childProps);
 
     return (

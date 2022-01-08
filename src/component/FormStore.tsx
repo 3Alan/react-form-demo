@@ -32,7 +32,7 @@ export default class FormStore {
     });
   }
 
-  public getFiledValue(filedName: string) {
+  public getFieldValue(filedName: string) {
     return this.value[filedName] || '';
   }
 
@@ -40,14 +40,16 @@ export default class FormStore {
     return this.value;
   }
 
-  public setFiledValue(fieldName: string, fieldValue: any) {
-    this.value[fieldName] = fieldValue;
-    delete this.errors[fieldName];
+  public setFieldsValue(fields: { [propsName: string]: any }) {
+    Object.keys(fields).forEach(fieldName => {
+      this.value[fieldName] = fields[fieldName];
+      delete this.errors[fieldName];
 
-    this.notify(fieldName);
+      this.notify(fieldName);
+    });
   }
 
-  public resetFiledValue() {
+  public resetFieldsValue() {
     this.errors = {};
 
     this.value = deepClone(this.defaultValue);
@@ -81,7 +83,7 @@ export default class FormStore {
     } else {
       const validator = this.rules[fieldName];
 
-      const fieldValue = this.getFiledValue(fieldName);
+      const fieldValue = this.getFieldValue(fieldName);
       const [pass, errorMessage] = validator ? validator(fieldValue, this.value) : [true, ''];
 
       let error;

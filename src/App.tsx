@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import Form from './component/Form';
+import { useRef, useState } from 'react';
+import Form, { StoreData } from './component/Form';
 import FormStore from './component/FormStore';
 import Field from './component/Field';
 import Input from './component/Input';
@@ -16,15 +16,22 @@ function App() {
     })
   );
 
-  const onSubmit = (e: any) => {
-    e.preventDefault();
-    const data = store.current.getValue();
-    store.current.validate();
-    console.log(data);
+  const [data, setData] = useState('');
+
+  const onSubmit = (values: StoreData) => {
+    console.log(values);
+    setData(JSON.stringify(values));
   };
 
   const onReset = () => {
-    store.current.resetFiledValue();
+    store.current.resetFieldsValue();
+  };
+
+  const onSetValue = () => {
+    store.current.setFieldsValue({
+      username: 'Alan',
+      age: 24
+    });
   };
 
   return (
@@ -36,9 +43,13 @@ function App() {
         <Field label="age > 10" name="age" type="number">
           <Input type="number" />
         </Field>
-        <button>Submit</button>
+        <button type="submit">Submit</button>
       </Form>
+
       <button onClick={onReset}>reset</button>
+      <button onClick={onSetValue}>fill value</button>
+
+      <div>{data}</div>
     </div>
   );
 }
