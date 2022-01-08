@@ -1,4 +1,4 @@
-import { deepClone } from './utils';
+import { deepClone } from '../utils';
 
 export default class FormStore {
   value: any;

@@ -1,20 +1,18 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Form, { StoreData } from './component/Form';
-import FormStore from './component/FormStore';
 import Field from './component/Field';
 import Input from './component/Input';
+import useForm from './component/useForm';
 
 function App() {
-  const store = useRef(
-    new FormStore({
-      defaultValue: {
-        age: 10
-      },
-      rules: {
-        age: (value: any) => [value > 10, 'age must more than 10']
-      }
-    })
-  );
+  const [form] = useForm({
+    defaultValue: {
+      age: 10
+    },
+    rules: {
+      age: (value: any) => [value > 10, 'age must more than 10']
+    }
+  });
 
   const [data, setData] = useState('');
 
@@ -24,11 +22,11 @@ function App() {
   };
 
   const onReset = () => {
-    store.current.resetFieldsValue();
+    form.resetFieldsValue();
   };
 
   const onSetValue = () => {
-    store.current.setFieldsValue({
+    form.setFieldsValue({
       username: 'Alan',
       age: 24
     });
@@ -36,7 +34,7 @@ function App() {
 
   return (
     <div className="App">
-      <Form store={store.current} onSubmit={onSubmit}>
+      <Form store={form} onSubmit={onSubmit}>
         <Field label="username" name="username">
           <Input />
         </Field>
